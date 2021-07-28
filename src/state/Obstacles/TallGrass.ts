@@ -1,4 +1,4 @@
-import {Obstacle, SpriteData, SpriteSheetData} from "../Definitions"
+import {ActorStats, Obstacle, SpriteData, SpriteSheetData} from "../Definitions"
 
 const TallGrassSpriteSheetData = new SpriteSheetData({
     "TallGrass1": new SpriteData(1.6, -.7, "TallGrass1", 10, 10),
@@ -6,6 +6,6 @@ const TallGrassSpriteSheetData = new SpriteSheetData({
 
 export class TallGrass extends Obstacle{
     constructor(){
-        super("Tall Grass", 2, 2, "", "TallGrass1", TallGrassSpriteSheetData)
+        super("Tall Grass", new ActorStats(2,2,0,0), "", "TallGrass1", TallGrassSpriteSheetData)
     }
 }

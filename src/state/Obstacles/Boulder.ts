@@ -1,4 +1,4 @@
-import {Obstacle, SpriteData, SpriteSheetData} from "../Definitions"
+import {ActorStats, Obstacle, SpriteData, SpriteSheetData} from "../Definitions"
 
 const BoulderSpriteSheetData = new SpriteSheetData({
     "Boulder1": new SpriteData(1.6, -.7, "Boulder1", 10, 10),
@@ -7,7 +7,7 @@ const BoulderSpriteSheetData = new SpriteSheetData({
 
 export class Boulder extends Obstacle{
     constructor(){
-        super("Boulder", 4, 4, "", Boulder.getSkin(), BoulderSpriteSheetData)
+        super("Boulder", new ActorStats(4,4,0,0), "", Boulder.getSkin(), BoulderSpriteSheetData)
     }
     static getSkin(){
         switch(Math.floor(Math.random() * 2)){

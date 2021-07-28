@@ -65,10 +65,21 @@ new Promise<void>(async (resolve, reject) => {
         reject(e);
     }
     resolve();
-}).then(
-    () => {
+})
+
+fetch("http://localhost:5000/session", {method: "POST"})
+.then(
+    async resp => {
+        if(resp.status == 200){
+            const json = await resp.json();
+            return json["sid"]
+        }
+    }
+)
+.then(
+    (sid) => {
         ReactDOM.render(
-            <GameSession/>,
+            <GameSession sid={sid}/>,
             document.getElementById('reactive')
         )
     }

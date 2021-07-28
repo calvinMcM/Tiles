@@ -81,6 +81,9 @@ export enum BlockType {
     ROCK="rock",
     CASTLE="castle",
 }
+export module BlockType{
+    export const List: BlockType[] = [BlockType.GRASS, BlockType.DIRT, BlockType.WATER, BlockType.SAND, BlockType.ROCK, BlockType.CASTLE];
+}
 
 export class SpriteData{
     constructor(
@@ -98,10 +101,21 @@ export class SpriteSheetData{
     ){}
 }
 
+export class ActorStats {
+    public readonly isDead: boolean;
+    constructor(
+        public readonly max_hp: number,
+        public readonly curr_hp: number,
+        public readonly move: number,
+        public readonly jump: number,
+    ){
+        this.isDead = curr_hp != 0;
+    }
+}
+
 export interface Actor {
     readonly name: string,
-    readonly max_hp: number,
-    readonly curr_hp: number,
+    readonly stats: ActorStats
     readonly curr_anim: string,
     readonly curr_sprite: string,
     readonly spritesheetData: SpriteSheetData,
@@ -110,8 +124,7 @@ export interface Actor {
 export abstract class Obstacle implements Actor{
     constructor(
         public readonly name: string,
-        public readonly max_hp: number,
-        public readonly curr_hp: number,
+        public readonly stats: ActorStats,
         public readonly curr_anim: string,
         public readonly curr_sprite: string,
         public readonly spritesheetData: SpriteSheetData,
@@ -121,8 +134,7 @@ export abstract class Obstacle implements Actor{
 export abstract class Fighter implements Actor {
     constructor(
         public readonly name: string,
-        public readonly max_hp: number,
-        public readonly curr_hp: number,
+        public readonly stats: ActorStats,
         public readonly curr_anim: string,
         public readonly curr_sprite: string,
         public readonly spritesheetData: SpriteSheetData,

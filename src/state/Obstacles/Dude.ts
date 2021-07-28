@@ -1,4 +1,4 @@
-import {Obstacle, SpriteData, SpriteSheetData} from "../Definitions"
+import {ActorStats, Obstacle, SpriteData, SpriteSheetData} from "../Definitions"
 
 const DudeSpriteSheetData = new SpriteSheetData({
     "Dude1": new SpriteData(80, -70, "Dude1", .45, .45),
@@ -7,7 +7,7 @@ const DudeSpriteSheetData = new SpriteSheetData({
 
 export class Dude extends Obstacle{
     constructor(){
-        super("Guy", 4, 4, "", Dude.getSkin(), DudeSpriteSheetData)
+        super("Guy", new ActorStats(4, 4, 3, 2), "", Dude.getSkin(), DudeSpriteSheetData)
     }
     static getSkin(){
         switch(Math.floor(Math.random() * 2)){

@@ -1,16 +1,11 @@
 import { ActorMapping } from '../redux/SessionState';
 import { BlockType, TILE_DEPTH, TILE_WIDTH, TileData } from './Definitions';
-import Sample1 from "../../public/Maps/Sample.json";
 
-
-const fld_ht = Sample1.height;
-
-const fld_tr = Sample1.terrain;
 
 const fld_act: (string|null)[][] = [
     [null,null,"tree0001",null, null,"rock0001",null,null,      "bush0001",null,null,null,      null,null,null,null],
     [null,null,null,null,       null,null,null,null,            null,null,null,null,            null,"rock0002",null,null],
-    [null,null,null,"dude0001", null,"rock0003",null,null,      null,null,null,null,            null,"dude0002", null, "tree0002"],
+    [null,null,null,"A01",      null,"rock0003",null,null,      null,null,null,null,            null,"dude0002", null, "tree0002"],
     [null,null,null,null,       null,null,null,null,            null,null,null,null,            null,null,null,null],
     
     [null,"dude0003",null,null, null,null,null,null,            null,null,null,null,            null,null,"tall0001",null],
@@ -106,10 +101,20 @@ function rotateMap(times: number, map: any[][]){
     return current
 }
 
-export function generateMap(rotation: number = 0, actors: ActorMapping): TileData[][]{
+export async function generateMap(sid: string, rotation: number = 0, actors: ActorMapping): Promise<{teams: any[], map: TileData[][]}>{
+    
+    const htData = await fetch("http://localhost:5000/session/" + sid);
+    const j = await htData.json();
+    console.log(j, htData.status);
+    const {teams, map: {height: fld_ht, terrain: fld_tr}} = j;
     const map = zipMaps(fld_ht, fld_tr, fld_act)
     console.log("Rotated:", rotation);
     const rotated = rotateMap(rotation, map)
     const t: TileData[][] = isometric_field_transform(rotated);
-    return t;
+
+
+    return {
+        map: t,
+        teams: teams
+    };
 }
