@@ -11,6 +11,10 @@ export const MAP_SEL_SET = createAction("map/selection/set", resolve => {
     return (data: TileData) => resolve(data)
 });
 
+export const MAP_HOV_SET = createAction("map/hover/set", resolve => {
+    return (data: Phaser.Geom.Point) => resolve(data)
+});
+
 export const MAP_ROT_SET = createAction("map/rotation/set", resolve => {
     return (rotation: number) => resolve(rotation)
 });

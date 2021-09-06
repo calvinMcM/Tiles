@@ -1,9 +1,17 @@
-import { createAction } from "typesafe-actions";
-import { BlockType, TileData } from "../../state/Definitions";
-import { ActorsState } from "../SessionState";
+import { createAction } from 'typesafe-actions';
 
-export const CHAR_SET = createAction("char/set", //).map(
-    resolve => {
-        return (actor: ActorsState) => resolve(actor)
+import { ActorData } from '../../state/Definitions';
+
+export const CHAR_SET = createAction(
+    "char/set",
+    (resolve) => {
+        return (actor: ActorData) => resolve(actor);
+    }
+);
+
+export const CHAR_REPLACE = createAction(
+    "char/replaceall",
+    (resolve) => {
+        return (actors: ActorData[]) => resolve(actors);
     }
 );

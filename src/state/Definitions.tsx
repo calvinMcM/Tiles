@@ -11,12 +11,11 @@ export class TileData {
         public readonly u: number,
         public readonly v: number,
         public readonly t: BlockType,
-        public readonly a: string,
         public readonly variant: number = 0,
     ){}
 
     static from(o: TileData): TileData{
-        return new TileData(o.x, o.y, o.h, o.u, o.v, o.t, o.a);
+        return new TileData(o.x, o.y, o.h, o.u, o.v, o.t);
     }
 
     static equal(a: TileData|null, b: TileData|null){
@@ -113,31 +112,16 @@ export class ActorStats {
     }
 }
 
-export interface Actor {
-    readonly name: string,
-    readonly stats: ActorStats
-    readonly curr_anim: string,
-    readonly curr_sprite: string,
-    readonly spritesheetData: SpriteSheetData,
-}
 
-export abstract class Obstacle implements Actor{
+export class ActorData {
     constructor(
+        public readonly id: string,
+        public readonly team_id: number,
         public readonly name: string,
-        public readonly stats: ActorStats,
-        public readonly curr_anim: string,
-        public readonly curr_sprite: string,
-        public readonly spritesheetData: SpriteSheetData,
-    ){}
-}
-
-export abstract class Fighter implements Actor {
-    constructor(
-        public readonly name: string,
-        public readonly stats: ActorStats,
-        public readonly curr_anim: string,
-        public readonly curr_sprite: string,
-        public readonly spritesheetData: SpriteSheetData,
+        public readonly maxHP: number,
+        public readonly curHP: number,
+        public readonly move: number,
+        public readonly jump: number,
     ){}
 }
 

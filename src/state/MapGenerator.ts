@@ -1,5 +1,5 @@
 import { ActorMapping } from '../redux/SessionState';
-import { BlockType, TILE_DEPTH, TILE_WIDTH, TileData } from './Definitions';
+import { BlockType, TILE_DEPTH, TILE_WIDTH, TileData, ActorData } from './Definitions';
 
 
 const fld_act: (string|null)[][] = [
@@ -57,7 +57,7 @@ function zipMaps(heightMap: number[][], terrainMap: string[][], actorMap: (strin
     return map;
 }
 
-function isometric_field_transform(mtx: {h: number, t: BlockType, variant: number, a: string}[][]): TileData[][]{
+function isometric_field_transform(mtx: {h: number, t: BlockType, variant: number}[][]): TileData[][]{
     const width = mtx.length
     const height = mtx[0].length
     const transform = []
@@ -73,7 +73,6 @@ function isometric_field_transform(mtx: {h: number, t: BlockType, variant: numbe
                 x,
                 y,
                 mtx[y][x].t,
-                mtx[y][x].a,
                 mtx[y][x].variant
             ))
         }
@@ -101,20 +100,30 @@ function rotateMap(times: number, map: any[][]){
     return current
 }
 
-export async function generateMap(sid: string, rotation: number = 0, actors: ActorMapping): Promise<{teams: any[], map: TileData[][]}>{
+export function convertMap(map: any[][]){
+    const result: Pick<TileData, "t"|"variant"|"h">[][] = Array.from({length: 16}, (v,j) => Array.from({length: 16}, (v2,i) => ({variant: 0, h: 0, t: BlockType.DIRT})));
+    map.forEach(entry => {
+        const [x, y, h, t, v] = entry;
+        result[y][x] = Object.assign(result[y][x], {variant: v, t: mapTerrain(t), h: h});
+    });
+    const iso_transformed = isometric_field_transform(result);
+    return iso_transformed;
+}
+
+export async function generateMap(sid: string, rotation: number = 0): Promise<{units: ActorData[], map: TileData[][], fieldState: any}>{
     
     const htData = await fetch("http://localhost:5000/session/" + sid);
     const j = await htData.json();
     console.log(j, htData.status);
-    const {teams, map: {height: fld_ht, terrain: fld_tr}} = j;
-    const map = zipMaps(fld_ht, fld_tr, fld_act)
-    console.log("Rotated:", rotation);
-    const rotated = rotateMap(rotation, map)
-    const t: TileData[][] = isometric_field_transform(rotated);
+    const {map, units, fieldState} = j;
 
+    // console.log("Rotated:", rotation);
+    // const rotated = rotateMap(rotation, map)
+    // const t: TileData[][] = isometric_field_transform(rotated);
 
     return {
-        map: t,
-        teams: teams
+        map: convertMap(map),
+        units: units,
+        fieldState: fieldState
     };
 }

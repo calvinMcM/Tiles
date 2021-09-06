@@ -11,8 +11,11 @@ export const UnitReducer = (state: SessionState, action: Action) => {
     }
     switch(action.type){
         case "char/set":
-            const actors = Object.assign({}, state.actors, {[action.payload.id]: action.payload});
-            newState = new SessionState(state.map, state.selection, state.rotation, actors);
+            const actors = state.actors.map(a => a.id == action.payload.id ? action.payload : a);
+            newState = new SessionState(state.map, actors, state.fieldState, state.hover, state.selection, state.rotation);
+            break;
+        case "char/replaceall":
+            newState = new SessionState(state.map, action.payload, state.fieldState, state.hover, state.selection, state.rotation);
             break;
     }
     return newState;
