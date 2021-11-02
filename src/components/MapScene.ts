@@ -1,16 +1,17 @@
-import Phaser from "phaser";
-import { Unsubscribe } from "redux";
+import Phaser from 'phaser';
+import { Unsubscribe } from 'redux';
 
-import { MAP_HOV_SET, MAP_SEL_SET } from "../redux/actions/MapActions";
-import { ActorsState, SessionState } from "../redux/SessionState";
-import store from "../redux/SessionStore";
-import { BlockContext, TileData } from "../state/Definitions";
-import { Boulder } from "./actors/Boulder";
-import { Actor } from "./actors/Actor";
-import { Bush } from "./actors/Bush";
-import { Tile } from "./tiles/Tile";
-import { TileFactory } from "./tiles/TileFactory";
-import { Tree } from "./actors/Tree";
+import { MAP_HOV_SET, MAP_SEL_SET } from '../redux/actions/MapActions';
+import { SessionState } from '../redux/SessionState';
+import store from '../redux/SessionStore';
+import { BlockContext, TileData } from '../state/Definitions';
+import { Actor } from './actors/Actor';
+import { Boulder } from './actors/Boulder';
+import { Bush } from './actors/Bush';
+import { TallGrass } from './actors/TallGrass';
+import { Tree } from './actors/Tree';
+import { Tile } from './tiles/Tile';
+import { TileFactory } from './tiles/TileFactory';
 
 export const SCREEN_DIM: Phaser.Geom.Point = new Phaser.Geom.Point(800, 600);
 const FRINGE_WIDTH = 50;
@@ -46,6 +47,7 @@ export class MapScene extends Phaser.Scene {
         Tile.preload(this);
         this.load.spritesheet("bush", "/public/Tiles/bush1.svg", { frameWidth: 60, frameHeight: 50 });
         this.load.spritesheet("boulder", "/public/Tiles/Boulder1.svg", { frameWidth: 60, frameHeight: 50 });
+        this.load.spritesheet("grass", "/public/Tiles/TallGrass_1.svg", { frameWidth: 60, frameHeight: 50 });
         this.load.spritesheet("tree", "/public/Tiles/Tree_1.svg", { frameWidth: 120, frameHeight: 150 });
         this.load.spritesheet("knight", "/Tiles/Knight2.svg", { frameWidth: 80, frameHeight: 160 });
     }
@@ -67,6 +69,7 @@ export class MapScene extends Phaser.Scene {
         });
         this.state = store.getState();
         Tree.createAnimation(this);
+        TallGrass.createAnimation(this);
 
         this.bounds = {
             minx: 50 * this.state.map.length + 20,
@@ -95,6 +98,9 @@ export class MapScene extends Phaser.Scene {
                 case "boulder":
                     this.actorSprites[actor.id] = new Boulder(actor);
                     break;
+                case "grass":
+                    this.actorSprites[actor.id] = new TallGrass(actor);
+                    break;
                 case "tree":
                     this.actorSprites[actor.id] = new Tree(actor);
                     break;
@@ -108,14 +114,6 @@ export class MapScene extends Phaser.Scene {
             }
         });
         this.cameras.main.setBounds(-1000, -500, 2000, 1500);
-        // this.tweens.add({
-        //     targets: logo,
-        //     y: 350,
-        //     duration: 1500,
-        //     ease: 'Sine.inOut',
-        //     yoyo: true,
-        //     repeat: -1
-        // });
     }
 
     update() {

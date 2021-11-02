@@ -55,7 +55,7 @@ export class GameSession extends React.Component<{ sid: string }, SessionState> 
                         <LeftPanel
                             tileData={this.state.selection}
                             context={BlockContext.fromMapContext(this.state.map, this.state.selection?.u || 0, this.state.selection?.v || 0)}
-                            actors={this.state.actors}
+                            state={this.state}
                         />
                     </Col>
                 </Row>

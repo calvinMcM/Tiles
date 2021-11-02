@@ -2,11 +2,13 @@ import * as React from 'react';
 import { Form } from 'react-bootstrap';
 
 import { MAP_EDIT_SET_TYPE } from '../redux/actions/MapActions';
+import { SessionState } from '../redux/SessionState';
 import store from '../redux/SessionStore';
 import { ActorData, BlockContext, BlockType, TileData } from '../state/Definitions';
+import { UnitPanel } from './hud/UnitPanel';
 
-export const LeftPanel: React.FC<{ tileData: TileData | null, context: BlockContext, actors: ActorData[] }> = props => {
-    const { tileData, context, actors } = props;
+export const LeftPanel: React.FC<{ tileData: TileData | null, context: BlockContext, state: SessionState }> = props => {
+    const { tileData, context, state } = props;
     if (!tileData) {
         return (
             <>
@@ -34,6 +36,18 @@ export const LeftPanel: React.FC<{ tileData: TileData | null, context: BlockCont
                         })
                 }
             </Form.Control>
+            {
+                props.state.actors
+                    .filter(actor => {
+                        const actorAt = props.state.fieldState.find(t => t.x === props?.tileData?.u && t.y === props?.tileData?.v)
+                        return actorAt?.id === actor.id;
+                    })
+                    .map(actor => {
+                        return (
+                            <UnitPanel unit={actor} />
+                        );
+                    })
+            }
         </>
     );
 }
